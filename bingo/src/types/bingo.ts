@@ -1,6 +1,5 @@
 export type BingoInput = {
-  sterkeWerkwoorden: BingoZin[];
-  zwakkeWerkwoorden: BingoZin[];
+  werkwoorden: BingoZin[];
 };
 
 export type BingoZin = {
