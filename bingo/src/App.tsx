@@ -1,23 +1,20 @@
-import React from 'react';
-import logo from './logo.svg';
+import Button from '@mui/material/Button';
 import './App.css';
 
-function App() {
+const handleClick = (): void => {
+  console.log('Boem paukenslag!');
+};
+
+function App(): JSX.Element {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <h1>Bingo generator</h1>
+        <div>
+          <Button variant="contained" color="primary" onClick={handleClick}>
+            Boem paukenslag!
+          </Button>
+        </div>
       </header>
     </div>
   );
