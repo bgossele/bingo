@@ -6,20 +6,11 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { BingoInput, BingoZin } from '../types/bingo';
 
-const bingoZinnen: BingoZin[] = [
-  {
-    infinitief: 'spelen',
-    vertaling: 'jouer',
-    zin: 'Gisteren ... ik voor het eerst sinds lang nog eens onderwaterhockey.',
-    sterkWerkwoord: false,
-  },
-];
-
 function BingoInputTabel() {
-  const [input, setInput] = useState<BingoInput>({ werkwoorden: [] });
+  const [input] = useState<BingoInput>({ werkwoorden: [] });
   const [nieuwWerkwoord, setNieuwWerkwoord] = useState<string>('');
   const [nieuweVertaling, setNieuweVertaling] = useState<string>('');
   const [nieuweZin, setNieuweZin] = useState<string>('');
@@ -29,21 +20,21 @@ function BingoInputTabel() {
     [nieuwWerkwoord, nieuweVertaling, nieuweZin],
   );
 
-  const toevoegen = () => {
+  const toevoegen = useCallback(() => {
+    if (!toevoegenMogelijk) {
+      return;
+    }
     const newWerkwoord: BingoZin = {
       infinitief: nieuwWerkwoord,
       vertaling: nieuweVertaling,
       zin: nieuweZin,
       sterkWerkwoord: false,
     };
-    setInput((prevInput) => ({
-      ...prevInput,
-      werkwoorden: [...prevInput.werkwoorden, newWerkwoord],
-    }));
+    input.werkwoorden.push(newWerkwoord);
     setNieuwWerkwoord('');
     setNieuweVertaling('');
     setNieuweZin('');
-  };
+  }, [input, nieuwWerkwoord, nieuweVertaling, nieuweZin, toevoegenMogelijk]);
 
   const handleNieuwWerkwoordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNieuwWerkwoord(event.target.value);
@@ -57,7 +48,38 @@ function BingoInputTabel() {
     setNieuweVertaling(event.target.value);
   };
 
-  input.werkwoorden = bingoZinnen;
+  //input.werkwoorden = [...bingoZinnen];
+
+  const tableRows = useMemo(() => {
+    return input.werkwoorden
+      .map((row, index) => (
+        <TableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+          <TableCell component="th" scope="row">
+            {row.infinitief}
+          </TableCell>
+          <TableCell align="left" sx={{ width: '400px' }}>
+            {row.zin}
+          </TableCell>
+          <TableCell align="left">{row.vertaling}</TableCell>
+        </TableRow>
+      ))
+      .concat(
+        <TableRow key="toevoegen">
+          <TableCell>
+            <input type="text" value={nieuwWerkwoord} onChange={handleNieuwWerkwoordChange} />
+          </TableCell>
+          <TableCell>
+            <input type="text" value={nieuweZin} onChange={handleZinChange} />
+          </TableCell>
+          <TableCell>
+            <input type="text" value={nieuweVertaling} onChange={handleVertalingChange} />
+          </TableCell>
+          <TableCell>
+            <AddIcon onClick={toevoegen} />
+          </TableCell>
+        </TableRow>,
+      );
+  }, [input.werkwoorden, nieuwWerkwoord, nieuweVertaling, nieuweZin, toevoegen]); // Update the dependency to input.werkwoorden instead of input
 
   return (
     <TableContainer component={Paper}>
@@ -65,7 +87,7 @@ function BingoInputTabel() {
         <TableHead>
           <TableRow>
             <TableCell sx={{ fontWeight: 'bold' }}>Werkwoord</TableCell>
-            <TableCell sx={{ fontWeight: 'bold' }} align="left">
+            <TableCell sx={{ fontWeight: 'bold', width: '300px' }} align="left">
               Zin
             </TableCell>
             <TableCell sx={{ fontWeight: 'bold' }} align="left">
@@ -73,31 +95,7 @@ function BingoInputTabel() {
             </TableCell>
           </TableRow>
         </TableHead>
-        <TableBody>
-          {input?.werkwoorden.map((row, index) => (
-            <TableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-              <TableCell component="th" scope="row">
-                {row.infinitief}
-              </TableCell>
-              <TableCell align="left">{row.zin}</TableCell>
-              <TableCell align="left">{row.vertaling}</TableCell>
-            </TableRow>
-          ))}
-          <TableRow>
-            <TableCell>
-              <input type="text" value={nieuwWerkwoord} onChange={handleNieuwWerkwoordChange} />
-            </TableCell>
-            <TableCell>
-              <input type="text" value={nieuweZin} onChange={handleZinChange} />
-            </TableCell>
-            <TableCell>
-              <input type="text" value={nieuweVertaling} onChange={handleVertalingChange} />
-            </TableCell>
-            <TableCell>
-              <AddIcon onClick={toevoegen} />
-            </TableCell>
-          </TableRow>
-        </TableBody>
+        <TableBody>{tableRows}</TableBody>
       </Table>
     </TableContainer>
   );
