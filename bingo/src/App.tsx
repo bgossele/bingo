@@ -14,7 +14,7 @@ function App(): JSX.Element {
       </header>
       <BingoInputTabel />
       <div>
-        <Button variant="contained" color="primary" onClick={handleClick}>
+        <Button sx={{ marginTop: '20px' }} variant="contained" color="primary" onClick={handleClick}>
           Boem paukenslag!
         </Button>
       </div>
