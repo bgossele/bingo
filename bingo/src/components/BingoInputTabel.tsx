@@ -48,8 +48,6 @@ function BingoInputTabel() {
     setNieuweVertaling(event.target.value);
   };
 
-  //input.werkwoorden = [...bingoZinnen];
-
   const tableRows = useMemo(() => {
     return input.werkwoorden
       .map((row, index) => (
@@ -66,38 +64,62 @@ function BingoInputTabel() {
       .concat(
         <TableRow key="toevoegen">
           <TableCell>
-            <input type="text" value={nieuwWerkwoord} onChange={handleNieuwWerkwoordChange} />
+            <input type="text" value={nieuwWerkwoord} onChange={handleNieuwWerkwoordChange} style={{ width: '100%' }} />
           </TableCell>
           <TableCell>
-            <input type="text" value={nieuweZin} onChange={handleZinChange} />
+            <input type="text" value={nieuweZin} onChange={handleZinChange} style={{ width: '100%' }} />
           </TableCell>
           <TableCell>
-            <input type="text" value={nieuweVertaling} onChange={handleVertalingChange} />
+            <input type="text" value={nieuweVertaling} onChange={handleVertalingChange} style={{ width: '100%' }} />
           </TableCell>
           <TableCell>
             <AddIcon onClick={toevoegen} />
           </TableCell>
         </TableRow>,
       );
-  }, [input.werkwoorden, nieuwWerkwoord, nieuweVertaling, nieuweZin, toevoegen]); // Update the dependency to input.werkwoorden instead of input
+  }, [input.werkwoorden, nieuwWerkwoord, nieuweVertaling, nieuweZin, toevoegen]);
 
   return (
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell sx={{ fontWeight: 'bold' }}>Werkwoord</TableCell>
-            <TableCell sx={{ fontWeight: 'bold', width: '300px' }} align="left">
-              Zin
-            </TableCell>
-            <TableCell sx={{ fontWeight: 'bold' }} align="left">
-              Vertaling
-            </TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>{tableRows}</TableBody>
-      </Table>
-    </TableContainer>
+    <div>
+      <TableContainer component={Paper} style={{ display: 'flex', justifyContent: 'center' }}>
+        <Table aria-label="simple table" sx={{ maxWidth: 200 }}>
+          <TableHead>
+            <TableRow>
+              <TableCell sx={{ fontWeight: 'bold' }}>Aantal formulieren</TableCell>
+              <TableCell sx={{ fontWeight: 'bold' }} align="left">
+                Aantal inputgroepen
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            <TableRow>
+              <TableCell>
+                <input type="number" min={1} name="boe" />
+              </TableCell>
+              <TableCell>
+                <input type="number" min={1} name="boe" />
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <TableCell sx={{ fontWeight: 'bold' }}>Werkwoord</TableCell>
+              <TableCell sx={{ fontWeight: 'bold', width: '300px' }} align="left">
+                Zin
+              </TableCell>
+              <TableCell sx={{ fontWeight: 'bold' }} align="left">
+                Vertaling
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>{tableRows}</TableBody>
+        </Table>
+      </TableContainer>
+    </div>
   );
 }
 
