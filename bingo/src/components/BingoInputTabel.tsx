@@ -15,7 +15,7 @@ const initialParameters = {
 };
 
 const BingoInputTabel = () => {
-  const [input] = useState<BingoInput>({ werkwoorden: [] });
+  const [input, setInput] = useState<BingoInput>({ werkwoorden: [] });
   const [parameters, setParameters] = useState<BingoParameters>(initialParameters);
 
   const onParameterChange = (name: string): ((event: ChangeEvent<HTMLInputElement>) => void) => {
@@ -23,17 +23,16 @@ const BingoInputTabel = () => {
       setParameters({ ...parameters, [name]: parseInt(event.target.value) });
   };
 
-  const toevoegen = useCallback(
-    (bingoZin: BingoZin) => {
-      input.werkwoorden.push(bingoZin);
-      console.log('input', input);
-    },
-    [input],
-  );
+  const werkwoordToevoegen = useCallback((bingoZin: BingoZin) => {
+    setInput((prevInput) => ({
+      ...prevInput,
+      werkwoorden: [...prevInput.werkwoorden, bingoZin],
+    }));
+  }, []);
 
-  const tableRows = useMemo(() => {
-    return input.werkwoorden
-      .map((row, index) => (
+  const bestaandeWerkwoorden = useMemo(
+    () =>
+      input.werkwoorden.map((row, index) => (
         <TableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
           <TableCell component="th" scope="row">
             {row.infinitief}
@@ -43,9 +42,13 @@ const BingoInputTabel = () => {
           </TableCell>
           <TableCell align="left">{row.vertaling}</TableCell>
         </TableRow>
-      ))
-      .concat(<ToevoegRij key="nieuwezin" toevoegen={toevoegen} />);
-  }, [input.werkwoorden, toevoegen]);
+      )),
+    [input.werkwoorden],
+  );
+
+  const tableRows = useMemo(() => {
+    return bestaandeWerkwoorden.concat(<ToevoegRij key="nieuwezin" toevoegenAanInput={werkwoordToevoegen} />);
+  }, [werkwoordToevoegen, bestaandeWerkwoorden]);
 
   return (
     <div>
