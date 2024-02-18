@@ -1,4 +1,3 @@
-import AddIcon from '@mui/icons-material/Add';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -6,47 +5,31 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import { useCallback, useMemo, useState } from 'react';
-import { BingoInput, BingoZin } from '../types/bingo';
+import { ChangeEvent, useCallback, useMemo, useState } from 'react';
+import { BingoInput, BingoParameters, BingoZin } from '../types/bingo';
+import ToevoegRij from './ToevoegRij';
 
-function BingoInputTabel() {
+const initialParameters = {
+  aantalRijenPerBlad: 5,
+  aantalBladen: 5,
+};
+
+const BingoInputTabel = () => {
   const [input] = useState<BingoInput>({ werkwoorden: [] });
-  const [nieuwWerkwoord, setNieuwWerkwoord] = useState<string>('');
-  const [nieuweVertaling, setNieuweVertaling] = useState<string>('');
-  const [nieuweZin, setNieuweZin] = useState<string>('');
+  const [parameters, setParameters] = useState<BingoParameters>(initialParameters);
 
-  const toevoegenMogelijk = useMemo(
-    () => nieuwWerkwoord.length > 0 && nieuweVertaling.length > 0 && nieuweZin.length > 0,
-    [nieuwWerkwoord, nieuweVertaling, nieuweZin],
+  const onParameterChange = (name: string): ((event: ChangeEvent<HTMLInputElement>) => void) => {
+    return (event: ChangeEvent<HTMLInputElement>): void =>
+      setParameters({ ...parameters, [name]: parseInt(event.target.value) });
+  };
+
+  const toevoegen = useCallback(
+    (bingoZin: BingoZin) => {
+      input.werkwoorden.push(bingoZin);
+      console.log('input', input);
+    },
+    [input],
   );
-
-  const toevoegen = useCallback(() => {
-    if (!toevoegenMogelijk) {
-      return;
-    }
-    const newWerkwoord: BingoZin = {
-      infinitief: nieuwWerkwoord,
-      vertaling: nieuweVertaling,
-      zin: nieuweZin,
-      sterkWerkwoord: false,
-    };
-    input.werkwoorden.push(newWerkwoord);
-    setNieuwWerkwoord('');
-    setNieuweVertaling('');
-    setNieuweZin('');
-  }, [input, nieuwWerkwoord, nieuweVertaling, nieuweZin, toevoegenMogelijk]);
-
-  const handleNieuwWerkwoordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setNieuwWerkwoord(event.target.value);
-  };
-
-  const handleZinChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setNieuweZin(event.target.value);
-  };
-
-  const handleVertalingChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setNieuweVertaling(event.target.value);
-  };
 
   const tableRows = useMemo(() => {
     return input.werkwoorden
@@ -61,23 +44,8 @@ function BingoInputTabel() {
           <TableCell align="left">{row.vertaling}</TableCell>
         </TableRow>
       ))
-      .concat(
-        <TableRow key="toevoegen">
-          <TableCell>
-            <input type="text" value={nieuwWerkwoord} onChange={handleNieuwWerkwoordChange} style={{ width: '100%' }} />
-          </TableCell>
-          <TableCell>
-            <input type="text" value={nieuweZin} onChange={handleZinChange} style={{ width: '100%' }} />
-          </TableCell>
-          <TableCell>
-            <input type="text" value={nieuweVertaling} onChange={handleVertalingChange} style={{ width: '100%' }} />
-          </TableCell>
-          <TableCell>
-            <AddIcon onClick={toevoegen} />
-          </TableCell>
-        </TableRow>,
-      );
-  }, [input.werkwoorden, nieuwWerkwoord, nieuweVertaling, nieuweZin, toevoegen]);
+      .concat(<ToevoegRij key="nieuwezin" toevoegen={toevoegen} />);
+  }, [input.werkwoorden, toevoegen]);
 
   return (
     <div>
@@ -94,10 +62,22 @@ function BingoInputTabel() {
           <TableBody>
             <TableRow>
               <TableCell>
-                <input type="number" min={1} name="boe" />
+                <input
+                  type="number"
+                  min={1}
+                  name="aantalRijenPerBlad"
+                  value={parameters.aantalRijenPerBlad}
+                  onChange={onParameterChange('aantalRijenPerBlad')}
+                />
               </TableCell>
               <TableCell>
-                <input type="number" min={1} name="boe" />
+                <input
+                  type="number"
+                  min={1}
+                  name="aantalBladen"
+                  value={parameters.aantalBladen}
+                  onChange={onParameterChange('aantalBladen')}
+                />
               </TableCell>
             </TableRow>
           </TableBody>
@@ -121,6 +101,6 @@ function BingoInputTabel() {
       </TableContainer>
     </div>
   );
-}
+};
 
 export default BingoInputTabel;
