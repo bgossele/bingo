@@ -1,3 +1,4 @@
+import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -7,6 +8,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import { ChangeEvent, useCallback, useMemo, useState } from 'react';
 import { BingoInput, BingoParameters, BingoZin } from '../types/bingo';
+import { generateBingoSets } from '../utils/bingoGeneration';
 import ToevoegRij from './ToevoegRij';
 
 const initialParameters = {
@@ -50,15 +52,37 @@ const BingoInputTabel = () => {
     return bestaandeWerkwoorden.concat(<ToevoegRij key="nieuwezin" toevoegenAanInput={werkwoordToevoegen} />);
   }, [werkwoordToevoegen, bestaandeWerkwoorden]);
 
+  const boemPaukenslag = (): void => {
+    const { aantalBladen, aantalRijenPerBlad } = parameters;
+
+    if (!aantalBladen || !aantalRijenPerBlad) return;
+
+    const bingoSets: Set<number>[] = generateBingoSets(
+      parameters.aantalRijenPerBlad ?? 1,
+      parameters.aantalBladen ?? 1,
+      input.werkwoorden.length,
+    );
+
+    bingoSets.forEach((bingoSet, index) => {
+      console.log(`Bingoset ${index}`);
+      console.log('');
+      bingoSet.forEach((nummertje) => {
+        const { infinitief, vertaling, zin } = input.werkwoorden[nummertje];
+        console.log(`| ${infinitief} | ${zin} | ${vertaling} |`);
+      });
+      console.log('');
+    });
+  };
+
   return (
     <div>
       <TableContainer component={Paper} style={{ display: 'flex', justifyContent: 'center' }}>
         <Table aria-label="simple table" sx={{ maxWidth: 200 }}>
           <TableHead>
             <TableRow>
-              <TableCell sx={{ fontWeight: 'bold' }}>Aantal formulieren</TableCell>
+              <TableCell sx={{ fontWeight: 'bold' }}>Aantal rijen per blad</TableCell>
               <TableCell sx={{ fontWeight: 'bold' }} align="left">
-                Aantal inputgroepen
+                Aantal bladen
               </TableCell>
             </TableRow>
           </TableHead>
@@ -102,6 +126,11 @@ const BingoInputTabel = () => {
           <TableBody>{tableRows}</TableBody>
         </Table>
       </TableContainer>
+      <div>
+        <Button sx={{ marginTop: '20px' }} variant="contained" color="primary" onClick={boemPaukenslag}>
+          Boem paukenslag!
+        </Button>
+      </div>
     </div>
   );
 };

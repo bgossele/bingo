@@ -1,4 +1,4 @@
-export function generateNumberSet(
+export function generateBingoSets(
   aantalZinnenPerSet: number,
   aantalBingoSets: number,
   aantalBeschikbareZinnen: number,
