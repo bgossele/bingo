@@ -21,14 +21,12 @@ const ToevoegRij = (props: Props) => {
   function handleChange(name: string): (event: ChangeEvent<HTMLInputElement>) => void {
     return (event: ChangeEvent<HTMLInputElement>): void => {
       setNieuweBingoZin({ ...nieuweBingoZin, [name]: event.target.value });
-      console.log('event.target.value', event.target.value);
     };
   }
 
   const stringNietLeeg = (s: string | undefined): boolean => s != undefined && s.length > 0;
 
   const toevoegenMogelijk = useMemo(() => {
-    console.log('nieuweBingoZin', nieuweBingoZin);
     return (
       stringNietLeeg(nieuweBingoZin.infinitief) &&
       stringNietLeeg(nieuweBingoZin.vertaling) &&
@@ -40,8 +38,6 @@ const ToevoegRij = (props: Props) => {
     if (toevoegenMogelijk) {
       toevoegenAanInput(nieuweBingoZin);
       setNieuweBingoZin(legeBingoZin);
-    } else {
-      console.log('Niet alle velden zijn ingevuld');
     }
   };
 
@@ -67,7 +63,7 @@ const ToevoegRij = (props: Props) => {
         />
       </TableCell>
       <TableCell>
-        <AddIcon onClick={toevoegen} />
+        <AddIcon onClick={toevoegen} color={toevoegenMogelijk ? 'primary' : 'secondary'} />
       </TableCell>
     </TableRow>
   );
