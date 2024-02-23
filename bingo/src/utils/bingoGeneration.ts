@@ -3,6 +3,9 @@ export function generateBingoSets(
   aantalBingoSets: number,
   aantalBeschikbareZinnen: number,
 ): Set<number>[] {
+  if (aantalZinnenPerSet > aantalBeschikbareZinnen)
+    throw new Error('Er zijn niet genoeg zinnen om zoveel zinnen per set te genereren');
+
   const bingoSets: Set<number>[] = [];
 
   // Generate numbers based on the input
