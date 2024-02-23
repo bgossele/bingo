@@ -1,4 +1,3 @@
-import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -6,35 +5,37 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import { ChangeEvent, useCallback, useMemo, useState } from 'react';
-import { BingoInput, BingoParameters, BingoZin } from '../types/bingo';
-import { generateBingoSets } from '../utils/bingoGeneration';
+import { ChangeEvent, useCallback, useMemo } from 'react';
+import { useDispatch } from 'react-redux';
+import { useParameters, useWerkwoorden } from '../hooks/bingozinnen/hooks';
+import { setParameter, voegWerkwoordToe } from '../hooks/bingozinnen/reducer';
+import { BingoZin } from '../types/bingo';
 import ToevoegRij from './ToevoegRij';
 
-const initialParameters = {
-  aantalRijenPerBlad: 5,
-  aantalBladen: 5,
-};
-
 const BingoInputTabel = () => {
-  const [input, setInput] = useState<BingoInput>({ werkwoorden: [] });
-  const [parameters, setParameters] = useState<BingoParameters>(initialParameters);
+  const werkwoorden = useWerkwoorden();
+  const parameters = useParameters();
+  const dispatch = useDispatch();
 
   const onParameterChange = (name: string): ((event: ChangeEvent<HTMLInputElement>) => void) => {
-    return (event: ChangeEvent<HTMLInputElement>): void =>
-      setParameters({ ...parameters, [name]: parseInt(event.target.value) });
+    return (event: ChangeEvent<HTMLInputElement>): void => {
+      const parsedValue = parseInt(event.target.value);
+      if (!isNaN(parsedValue)) {
+        dispatch(setParameter({ name, value: parsedValue }));
+      }
+    };
   };
 
-  const werkwoordToevoegen = useCallback((bingoZin: BingoZin) => {
-    setInput((prevInput) => ({
-      ...prevInput,
-      werkwoorden: [...prevInput.werkwoorden, bingoZin],
-    }));
-  }, []);
+  const werkwoordToevoegen = useCallback(
+    (bingoZin: BingoZin) => {
+      dispatch(voegWerkwoordToe(bingoZin));
+    },
+    [dispatch],
+  );
 
   const bestaandeWerkwoorden = useMemo(
     () =>
-      input.werkwoorden.map((row, index) => (
+      werkwoorden.map((row, index) => (
         <TableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
           <TableCell component="th" scope="row">
             {row.infinitief}
@@ -45,34 +46,12 @@ const BingoInputTabel = () => {
           <TableCell align="left">{row.vertaling}</TableCell>
         </TableRow>
       )),
-    [input.werkwoorden],
+    [werkwoorden],
   );
 
   const tableRows = useMemo(() => {
     return bestaandeWerkwoorden.concat(<ToevoegRij key="nieuwezin" toevoegenAanInput={werkwoordToevoegen} />);
   }, [werkwoordToevoegen, bestaandeWerkwoorden]);
-
-  const boemPaukenslag = (): void => {
-    const { aantalBladen, aantalRijenPerBlad } = parameters;
-
-    if (!aantalBladen || !aantalRijenPerBlad) return;
-
-    const bingoSets: Set<number>[] = generateBingoSets(
-      parameters.aantalRijenPerBlad ?? 1,
-      parameters.aantalBladen ?? 1,
-      input.werkwoorden.length,
-    );
-
-    bingoSets.forEach((bingoSet, index) => {
-      console.log(`Bingoset ${index}`);
-      console.log('');
-      bingoSet.forEach((nummertje) => {
-        const { infinitief, vertaling, zin } = input.werkwoorden[nummertje];
-        console.log(`| ${infinitief} | ${zin} | ${vertaling} |`);
-      });
-      console.log('');
-    });
-  };
 
   return (
     <div>
@@ -126,11 +105,6 @@ const BingoInputTabel = () => {
           <TableBody>{tableRows}</TableBody>
         </Table>
       </TableContainer>
-      <div>
-        <Button sx={{ marginTop: '20px' }} variant="contained" color="primary" onClick={boemPaukenslag}>
-          Boem paukenslag!
-        </Button>
-      </div>
     </div>
   );
 };
