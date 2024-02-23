@@ -1,5 +1,6 @@
 export type BingoInput = {
   werkwoorden: BingoZin[];
+  parameters: BingoParameters;
 };
 
 export type BingoParameters = {
