@@ -1,4 +1,6 @@
+import { Tooltip } from '@mui/material';
 import Button from '@mui/material/Button';
+import { useMemo } from 'react';
 import BingoInputTabel from '../components/BingoInputTabel';
 import { useParameters, useWerkwoorden } from '../hooks/bingozinnen/hooks';
 import { generateBingoSets } from '../utils/bingoGeneration';
@@ -8,9 +10,7 @@ export const Input = () => {
   const werkwoorden = useWerkwoorden();
 
   const boemPaukenslag = (): void => {
-    const { aantalBladen, aantalRijenPerBlad } = parameters;
-
-    if (!aantalBladen || !aantalRijenPerBlad) return;
+    if (!paukenslagMogelijk) return;
 
     const bingoSets: Set<number>[] = generateBingoSets(
       parameters.aantalRijenPerBlad ?? 1,
@@ -29,6 +29,18 @@ export const Input = () => {
     });
   };
 
+  const paukenslagMogelijk = useMemo(() => {
+    const { aantalBladen, aantalRijenPerBlad } = parameters;
+    return aantalBladen && aantalRijenPerBlad && werkwoorden.length > 0;
+  }, [werkwoorden, parameters]);
+
+  const getTitle = useMemo(() => {
+    if (paukenslagMogelijk) {
+      return 'Waar wacht je op?';
+    }
+    return 'Er ontbreekt input';
+  }, [paukenslagMogelijk]);
+
   return (
     <div className="App">
       <header className="App-header">
@@ -36,9 +48,16 @@ export const Input = () => {
       </header>
       <BingoInputTabel />
       <div>
-        <Button sx={{ marginTop: '20px' }} variant="contained" color="primary" onClick={boemPaukenslag}>
-          Boem paukenslag!
-        </Button>
+        <Tooltip title={getTitle}>
+          <Button
+            sx={{ marginTop: '20px' }}
+            variant="contained"
+            color={paukenslagMogelijk ? 'primary' : 'secondary'}
+            onClick={boemPaukenslag}
+          >
+            Boem paukenslag!
+          </Button>
+        </Tooltip>
       </div>
     </div>
   );
