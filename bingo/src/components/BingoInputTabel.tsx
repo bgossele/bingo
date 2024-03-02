@@ -44,6 +44,7 @@ const BingoInputTabel = () => {
             {row.zin}
           </TableCell>
           <TableCell align="left">{row.vertaling}</TableCell>
+          <TableCell />
         </TableRow>
       )),
     [werkwoorden],
@@ -55,7 +56,7 @@ const BingoInputTabel = () => {
 
   return (
     <div>
-      <TableContainer component={Paper} style={{ display: 'flex', justifyContent: 'center' }}>
+      <TableContainer component={Paper} style={{ display: 'flex', justifyContent: 'center', width: 'auto' }}>
         <Table aria-label="simple table" sx={{ maxWidth: 200 }}>
           <TableHead>
             <TableRow>
@@ -100,6 +101,7 @@ const BingoInputTabel = () => {
               <TableCell sx={{ fontWeight: 'bold' }} align="left">
                 Vertaling
               </TableCell>
+              <TableCell />
             </TableRow>
           </TableHead>
           <TableBody>{tableRows}</TableBody>

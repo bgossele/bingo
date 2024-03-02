@@ -1,12 +1,12 @@
 import { Provider } from 'react-redux';
 import './App.css';
 import { store } from './store/store';
-import { Input } from './views/Input';
+import Bingo from './views/Bingo';
 
 function App(): JSX.Element {
   return (
     <Provider store={store}>
-      <Input />
+      <Bingo />
     </Provider>
   );
 }
