@@ -1,5 +1,5 @@
 import React from 'react';
-import wortelImage from '../assets/wortel.jpg';
+import { BingoOutput } from '../components/BingoOutput';
 import { Input } from './Input';
 
 const Bingo: React.FC = () => {
@@ -9,7 +9,7 @@ const Bingo: React.FC = () => {
         <Input />
       </div>
       <div style={{ flex: 1 }}>
-        <img src={wortelImage} alt="Wortel" />
+        <BingoOutput />
       </div>
     </div>
   );

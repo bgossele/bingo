@@ -2,12 +2,15 @@ import { Tooltip } from '@mui/material';
 import Button from '@mui/material/Button';
 import { useMemo } from 'react';
 import BingoInputTabel from '../components/BingoInputTabel';
+import { voegBingoSetjesToe } from '../hooks/bingoOutput/reducer';
 import { useParameters, useWerkwoorden } from '../hooks/bingozinnen/hooks';
+import { useAppDispatch } from '../store/hooks';
 import { generateBingoSets } from '../utils/bingoGeneration';
 
 export const Input = () => {
   const parameters = useParameters();
   const werkwoorden = useWerkwoorden();
+  const dispatch = useAppDispatch();
 
   const boemPaukenslag = (): void => {
     if (!paukenslagMogelijk) return;
@@ -18,15 +21,7 @@ export const Input = () => {
       werkwoorden.length,
     );
 
-    bingoSets.forEach((bingoSet, index) => {
-      console.log(`Bingoset ${index}`);
-      console.log('');
-      bingoSet.forEach((nummertje) => {
-        const { infinitief, vertaling, zin } = werkwoorden[nummertje];
-        console.log(`| ${infinitief} | ${zin} | ${vertaling} |`);
-      });
-      console.log('');
-    });
+    dispatch(voegBingoSetjesToe(bingoSets));
   };
 
   const paukenslagMogelijk = useMemo(() => {
@@ -42,7 +37,7 @@ export const Input = () => {
   }, [paukenslagMogelijk]);
 
   return (
-    <div className="App">
+    <div>
       <header className="App-header">
         <h1>Bingo generator</h1>
       </header>
