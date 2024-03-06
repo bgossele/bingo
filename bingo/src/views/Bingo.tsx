@@ -1,17 +1,14 @@
+import { Stack } from '@mui/material';
 import React from 'react';
 import { BingoOutput } from '../components/BingoOutput';
 import { Input } from './Input';
 
 const Bingo: React.FC = () => {
   return (
-    <div style={{ display: 'flex' }}>
-      <div style={{ flex: 1 }}>
-        <Input />
-      </div>
-      <div style={{ flex: 1 }}>
-        <BingoOutput />
-      </div>
-    </div>
+    <Stack direction="row" spacing={2}>
+      <Input />
+      <BingoOutput />
+    </Stack>
   );
 };
 

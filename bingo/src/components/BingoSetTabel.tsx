@@ -38,7 +38,7 @@ export const BingoSetTabel = (props: Props) => {
         <TableHead>
           <TableRow>
             <TableCell sx={{ fontWeight: 'bold' }}>Werkwoord</TableCell>
-            <TableCell sx={{ fontWeight: 'bold', width: '300px' }} align="left">
+            <TableCell sx={{ fontWeight: 'bold', maxWidth: '300px', wordWrap: 'break-word' }} align="left">
               Zin
             </TableCell>
             <TableCell sx={{ fontWeight: 'bold' }} align="left">

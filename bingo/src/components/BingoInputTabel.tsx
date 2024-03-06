@@ -40,7 +40,7 @@ const BingoInputTabel = () => {
           <TableCell component="th" scope="row">
             {row.infinitief}
           </TableCell>
-          <TableCell align="left" sx={{ width: '400px' }}>
+          <TableCell align="left" sx={{ maxWidth: '400px', wordWrap: 'break-word' }}>
             {row.zin}
           </TableCell>
           <TableCell align="left">{row.vertaling}</TableCell>
