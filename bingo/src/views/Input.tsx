@@ -26,7 +26,7 @@ export const Input = () => {
 
   const paukenslagMogelijk = useMemo(() => {
     const { aantalBladen, aantalRijenPerBlad } = parameters;
-    return aantalBladen && aantalRijenPerBlad && werkwoorden.length > 0;
+    return aantalBladen && aantalRijenPerBlad && werkwoorden.length > 0 && aantalRijenPerBlad <= werkwoorden.length;
   }, [werkwoorden, parameters]);
 
   const getTitle = useMemo(() => {
