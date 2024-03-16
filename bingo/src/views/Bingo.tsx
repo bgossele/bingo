@@ -9,7 +9,7 @@ const Bingo = () => {
   const bingoSetjes = useBingoSets();
 
   return (
-    <Stack direction="row" spacing={2}>
+    <Stack direction="row" spacing={2} sx={{ height: '80vh' }}>
       <Stack direction="column" spacing={2}>
         <Input />
 
