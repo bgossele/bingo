@@ -23,7 +23,7 @@ const Bingo = () => {
           </Box>
         )}
       </Stack>
-      <BingoOutput />
+      <BingoOutput nested />
     </Stack>
   );
 };
