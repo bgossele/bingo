@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { BingoInput, BingoZin } from '../../types/bingo'; // Import the BingoInput type
+import { BingoInput, BingoZin, HeaderFoto } from '../../types/bingo'; // Import the BingoInput type
 
 const initialState: BingoInput = {
   werkwoorden: [],
@@ -20,9 +20,12 @@ const bingoSlice = createSlice({
       const { name, value } = action.payload;
       state.parameters = { ...state.parameters, [name]: value };
     },
+    uploadFoto: (state, action: PayloadAction<HeaderFoto>) => {
+      state.headerFoto = action.payload;
+    },
   },
 });
 
-export const { voegWerkwoordToe, setParameter } = bingoSlice.actions;
+export const { voegWerkwoordToe, setParameter, uploadFoto } = bingoSlice.actions;
 
 export default bingoSlice.reducer;

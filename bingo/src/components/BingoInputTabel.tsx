@@ -7,8 +7,8 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import { ChangeEvent, useCallback, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
-import { useParameters, useWerkwoorden } from '../hooks/bingozinnen/hooks';
-import { setParameter, voegWerkwoordToe } from '../hooks/bingozinnen/reducer';
+import { useParameters, useWerkwoorden } from '../hooks/bingoInput/hooks';
+import { setParameter, voegWerkwoordToe } from '../hooks/bingoInput/reducer';
 import { BingoZin } from '../types/bingo';
 import ToevoegRij from './ToevoegRij';
 

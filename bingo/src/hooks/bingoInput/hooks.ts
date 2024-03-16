@@ -8,3 +8,5 @@ const useSelector = <TSelected>(selector: (state: BingoInput) => TSelected) =>
 export const useWerkwoorden = () => useSelector((state) => state.werkwoorden);
 
 export const useParameters = () => useSelector((state) => state.parameters);
+
+export const useHeaderFoto = () => useSelector((state) => state.headerFoto);

@@ -2,8 +2,9 @@ import { Tooltip } from '@mui/material';
 import Button from '@mui/material/Button';
 import { useMemo } from 'react';
 import BingoInputTabel from '../components/BingoInputTabel';
+import { useParameters, useWerkwoorden } from '../hooks/bingoInput/hooks';
+import { uploadFoto } from '../hooks/bingoInput/reducer';
 import { voegBingoSetjesToe } from '../hooks/bingoOutput/reducer';
-import { useParameters, useWerkwoorden } from '../hooks/bingozinnen/hooks';
 import { useAppDispatch } from '../store/hooks';
 import { generateBingoSets } from '../utils/bingoGeneration';
 
@@ -36,6 +37,18 @@ export const Input = () => {
     return 'Er ontbreekt input';
   }, [paukenslagMogelijk]);
 
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    const file = event.target.files?.[0];
+    console.log(event.target.files);
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        dispatch(uploadFoto({ data: reader.result, naam: file.name }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <div>
       <header className="App-header">
@@ -43,6 +56,7 @@ export const Input = () => {
       </header>
       <BingoInputTabel />
       <div>
+        <input type="file" accept="image/*" onChange={handleImageUpload} />
         <Tooltip title={getTitle}>
           <Button
             sx={{ marginTop: '20px' }}
