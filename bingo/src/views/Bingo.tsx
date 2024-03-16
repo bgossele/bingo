@@ -1,12 +1,28 @@
-import { Stack } from '@mui/material';
-import React from 'react';
+import { Download } from '@mui/icons-material';
+import { Box, Button, Stack } from '@mui/material';
+import { Link } from 'react-router-dom';
 import { BingoOutput } from '../components/BingoOutput';
+import { useBingoSets } from '../hooks/bingoOutput/hooks';
 import { Input } from './Input';
 
-const Bingo: React.FC = () => {
+const Bingo = () => {
+  const bingoSetjes = useBingoSets();
+
   return (
     <Stack direction="row" spacing={2}>
-      <Input />
+      <Stack direction="column" spacing={2}>
+        <Input />
+
+        {bingoSetjes && (
+          <Box>
+            <Link to={'/output'}>
+              <Button variant="contained" color="primary">
+                <Download />
+              </Button>
+            </Link>
+          </Box>
+        )}
+      </Stack>
       <BingoOutput />
     </Stack>
   );
